@@ -34,9 +34,11 @@ public class Main {
             for (JsonNode clubNode : clubsArray) {
                 String name = clubNode.get("name").asText();
                 String shortName = clubNode.get("short_name").asText();
+                int position = clubNode.get("position").asInt();
+
 
                 // Create a Club object and add it to the list
-                clubs.add(new Club(name, shortName));
+                clubs.add(new Club(name, shortName,position));
             }
 
             // Print the list of clubs
