@@ -31,10 +31,10 @@ public class Main {
             List<Club> clubs = new ArrayList<>();
 
             // Iterate through the array and extract the required fields
-            for (JsonNode clubNode : clubsArray) {
-                String name = clubNode.get("name").asText();
-                String shortName = clubNode.get("short_name").asText();
-                int position = clubNode.get("position").asInt();
+            for (JsonNode club : clubsArray) {
+                String name = club.get("name").asText();
+                String shortName = club.get("short_name").asText();
+                int position = club.get("position").asInt();
 
 
                 // Create a Club object and add it to the list
