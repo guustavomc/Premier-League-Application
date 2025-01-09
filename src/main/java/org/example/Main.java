@@ -24,25 +24,19 @@ public class Main {
             // Read the JSON file into a JsonNode
             JsonNode rootNode = objectMapper.readTree(new File(filePath));
 
-            // Access the "clubs" array
-            JsonNode clubsArray = rootNode.get("clubs");
+            JsonNode clubsNode = rootNode.get("clubs");
 
-            // Create a list to hold Club objects
-            List<Club> clubs = new ArrayList<>();
+            List<Club> clubsArray = new ArrayList<>();
 
-            // Iterate through the array and extract the required fields
-            for (JsonNode club : clubsArray) {
+            for(JsonNode club: clubsNode){
                 String name = club.get("name").asText();
-                String shortName = club.get("short_name").asText();
+                String short_name = club.get("short_name").asText();
                 int position = club.get("position").asInt();
 
-
-                // Create a Club object and add it to the list
-                clubs.add(new Club(name, shortName,position));
+                clubsArray.add(new Club(name, short_name, position));
             }
-
             // Print the list of clubs
-            for (Club club : clubs) {
+            for (Club club : clubsArray) {
                 club.printName();
             }
 
