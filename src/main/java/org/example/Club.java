@@ -3,11 +3,11 @@ package org.example;
 public class Club {
 
     private String name;
-    private String short_name;
+    private String clubCode;
     private int position;
-    public Club(String name, String short_name, int position ){
+    public Club(String name, String clubCode, int position ){
         this.name=name;
-        this.short_name=short_name;
+        this.clubCode=clubCode;
         this.position=position;
     }
 
@@ -19,12 +19,12 @@ public class Club {
         this.name = name;
     }
 
-    public java.lang.String getShort_name() {
-        return short_name;
+    public String getClubCode() {
+        return clubCode;
     }
 
-    public void setShort_name(java.lang.String short_name) {
-        this.short_name = short_name;
+    public void setClubCode(String clubCode) {
+        this.clubCode = clubCode;
     }
 
     public int getPosition() {
@@ -37,7 +37,7 @@ public class Club {
 
     public void printName(){
         System.out.println("Name: " + getName()
-                            +", Short Name: " + getShort_name()
+                            +", Short Name: " + getClubCode()
                             +", Position: " + getPosition());
     }
 

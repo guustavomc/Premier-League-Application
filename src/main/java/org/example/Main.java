@@ -19,6 +19,8 @@ public class Main {
         // Create ObjectMapper instance
         ObjectMapper objectMapper = new ObjectMapper();
 
+        List<Club> clubsArray = new ArrayList<>();
+
         try{
 
             // Read the JSON file into a JsonNode
@@ -26,11 +28,11 @@ public class Main {
 
             JsonNode clubsNode = rootNode.get("clubs");
 
-            List<Club> clubsArray = new ArrayList<>();
+            //List<Club> clubsArray = new ArrayList<>();
 
             for(JsonNode club: clubsNode){
                 String name = club.get("name").asText();
-                String short_name = club.get("short_name").asText();
+                String short_name = club.get("club_code").asText();
                 int position = club.get("position").asInt();
 
                 clubsArray.add(new Club(name, short_name, position));
@@ -38,6 +40,54 @@ public class Main {
             // Print the list of clubs
             for (Club club : clubsArray) {
                 club.printName();
+            }
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+
+            // Read the JSON file into a JsonNode
+            JsonNode rootNode = objectMapper.readTree(new File(filePath));
+
+            JsonNode seasonFixtureNode = rootNode.get("season_fixtures");
+
+            List<Fixture> fixtureArray = new ArrayList<>();
+
+            for(JsonNode matchDays: seasonFixtureNode){
+                int matchDay = matchDays.get("matchday").asInt();
+
+                JsonNode fixtureNode = matchDays.get("fixtures");
+                for(JsonNode fixture: fixtureNode){
+                    String homeTeamCode = fixture.get("home_team_code").asText();
+                    String awayTeamCode = fixture.get("away_team_code").asText();
+                    int homeTeamGoals = fixture.get("home_team_goals").asInt();
+                    int awayTeamGoals = fixture.get("away_team_goals").asInt();
+
+
+                    Club homeTeam = null;
+                    Club awayTeam = null;
+
+                    for(Club club: clubsArray){
+                        if(club.getClubCode().equals(homeTeamCode)){
+                            homeTeam= club;
+                        }
+                        if(club.getClubCode().equals(awayTeamCode)){
+                            awayTeam= club;
+                        }
+                        if(homeTeam!=null && awayTeam!=null){
+                            break;
+                        }
+                    }
+                    fixtureArray.add(new Fixture(homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, matchDay));
+                }
+
+            }
+            // Print the list of clubs
+            for (Fixture fixture : fixtureArray) {
+                fixture.printFixture();
             }
 
         }
