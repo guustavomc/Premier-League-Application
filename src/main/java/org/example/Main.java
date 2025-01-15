@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -18,13 +17,18 @@ public class Main {
 
         // Create ObjectMapper instance
         List<Club> clubsArray =  new readClubs(filePath).getClubList();
+        Collections.sort(clubsArray, Comparator.comparingInt(Club::getPosition));
+        System.out.println("Print Clubs by Position");
         for(Club club: clubsArray){
+
             club.printName();
         }
 
         List<Fixture> fixtureArray = new readFixtures(filePath, clubsArray).getFixturesList();
-        for(Fixture fixture: fixtureArray){
+        System.out.println("Print Fixtures");
+        for (Fixture fixture: fixtureArray){
             fixture.printFixture();
         }
+
     }
 }
