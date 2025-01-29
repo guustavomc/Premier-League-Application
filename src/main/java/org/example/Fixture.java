@@ -57,6 +57,6 @@ public class Fixture {
    }
 
    public void printFixture(){
-      System.out.println(getHomeTeam().getClubCode() + " VS " + getAwayTeam().getClubCode() );
+      System.out.println(getHomeTeam().getName() + "("+ getHomeTeamGoals()+") VS " + getAwayTeam().getName() + "("+ getAwayTeamGoals()+")");
    }
 }

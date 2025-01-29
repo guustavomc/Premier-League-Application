@@ -34,8 +34,12 @@ public class readClubs {
                 String name = club.get("name").asText();
                 String short_name = club.get("club_code").asText();
                 int position = club.get("position").asInt();
+                int wins = club.get("wins").asInt();
+                int losses = club.get("losses").asInt();
+                int goalsScored = club.get("goals_scored").asInt();
 
-                clubsArray.add(new Club(name, short_name, position));
+
+                clubsArray.add(new Club(name, short_name, position,wins,losses,goalsScored));
             }
 
         }
