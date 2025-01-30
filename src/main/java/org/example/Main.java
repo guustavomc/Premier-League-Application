@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-        String filePath = "src/main/java/data/data.json";
+        String filePath = "data/data.json";
         boolean inProgress = true;
 
         while(inProgress){

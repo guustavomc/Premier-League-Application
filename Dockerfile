@@ -1,17 +1,28 @@
-# Use OpenJDK como base
-FROM openjdk:17
+# Usa Maven com JDK 21
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copia os arquivos do projeto para o container
-COPY . /app
+# Copia o arquivo pom.xml e baixa as dependências
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Cria o diretório de saída para os arquivos compilados
-RUN mkdir -p out
+# Copia o restante do código-fonte
+COPY src ./src
 
-# Compila todos os arquivos Java manualmente
-RUN javac -d out $(ls *.java */*.java */*/*.java 2>/dev/null || echo "")
+# Compila o projeto e gera o JAR final
+RUN mvn clean package
 
-# Define o ponto de entrada para executar o programa
-CMD ["java", "-cp", "out", "org.example.Main"]
+# Usa uma imagem menor apenas com o JRE 21 para rodar a aplicação
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+# Copy the fat JAR from the build stage
+COPY --from=build /app/target/Premier-League-JSON-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
+
+# Copy the data.json file into the container
+COPY src/main/java/data/data.json /app/data/data.json
+
+
+CMD ["java", "-jar", "app.jar"]
