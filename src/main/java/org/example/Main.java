@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-        String filePath = "data/data.json";
+        String filePath = "src/main/java/data/data.json";
         boolean inProgress = true;
 
         while(inProgress){
@@ -27,6 +27,7 @@ public class Main {
             System.out.println("5 - Print Fixtures");
             System.out.println("6 - End operations");
 
+            System.out.println("Your Choice:");
             Integer value = scanner.nextInt();
 
             switch(value){
