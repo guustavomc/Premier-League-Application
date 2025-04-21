@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: premier-league-app
+  namespace: default
+  labels:
+    app: premier-league-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: premier-league-app
+  template:
+    metadata:
+      labels:
+        app: premier-league-app
+    spec:
+      containers:
+        - name: premier-league-app
+          image: guustavomccb/premier-league-app:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/clubs
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/clubs
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
