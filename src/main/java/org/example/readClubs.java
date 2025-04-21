@@ -2,29 +2,28 @@ package org.example;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+@Service
 public class readClubs {
 
-    String filePath;
-    public readClubs(String filePath) {
-        this.filePath=filePath;
-    }
 
-    public List<Club> getClubList(){
-
-        ObjectMapper objectMapper = new ObjectMapper();
+    public List<Club> clubList(){
 
         List<Club> clubsArray = new ArrayList<>();
 
-        try{
+        ObjectMapper objectMapper = new ObjectMapper();
 
+        try{
+            ClassPathResource resource = new ClassPathResource("data.json");
             // Read the JSON file into a JsonNode
-            JsonNode rootNode = objectMapper.readTree(new File(filePath));
+            JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
 
             JsonNode clubsNode = rootNode.get("clubs");
 
@@ -47,5 +46,34 @@ public class readClubs {
             e.printStackTrace();
         }
         return clubsArray;
+    }
+
+    public List<Club> findClubsArray() {
+        List<Club> clubsArray =  new readClubs().clubList();
+        return clubsArray;
+    }
+
+    public List<Club> findClubsByGoalsScored() {
+        List<Club> clubs = findClubsArray();
+        clubs.sort(Comparator.comparingInt(Club::getGoalsScored).reversed());
+        return clubs;
+    }
+
+    public List<Club> findClubsByLosses() {
+        List<Club> clubs = findClubsArray();
+        clubs.sort(Comparator.comparingInt(Club::getLosses).reversed());
+        return clubs;
+    }
+
+    public List<Club> findClubsByWins() {
+        List<Club> clubs = findClubsArray();
+        clubs.sort(Comparator.comparingInt(Club::getWins).reversed());
+        return clubs;
+    }
+
+    public List<Club> findClubsByPosition() {
+        List<Club> clubs = findClubsArray();
+        clubs.sort(Comparator.comparingInt(Club::getPosition));
+        return clubs;
     }
 }

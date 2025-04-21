@@ -2,31 +2,31 @@ package org.example;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class readFixtures {
 
-    String filePath;
-    List<Club> clubsArray;
-
-    public readFixtures(String filePath, List<Club> clubsArray){
-        this.filePath=filePath;
-        this.clubsArray=clubsArray;
-    }
+    readClubs clubs = new readClubs();
 
     public List<Fixture> getFixturesList(){
-        ObjectMapper objectMapper = new ObjectMapper();
 
         List<Fixture> fixtureArray = new ArrayList<>();
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Club> clubsList= clubs.findClubsArray();
+
         try{
+            ClassPathResource resource = new ClassPathResource("data.json");
 
             // Read the JSON file into a JsonNode
-            JsonNode rootNode = objectMapper.readTree(new File(filePath));
+            JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
 
             JsonNode seasonFixtureNode = rootNode.get("season_fixtures");
 
@@ -45,7 +45,7 @@ public class readFixtures {
                     Club homeTeam = null;
                     Club awayTeam = null;
 
-                    for(Club club: clubsArray){
+                    for(Club club: clubsList){
                         if(club.getClubCode().equals(homeTeamCode)){
                             homeTeam= club;
                         }
@@ -65,5 +65,9 @@ public class readFixtures {
         }
 
         return fixtureArray;
+    }
+
+    private List<Fixture> findFixtures() {
+        return new readFixtures().getFixturesList();
     }
 }

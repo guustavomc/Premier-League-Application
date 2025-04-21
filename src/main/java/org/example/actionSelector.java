@@ -3,104 +3,50 @@ package org.example;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping("/api/clubs")
 public class actionSelector {
 
-    private String filePath = "src/main/java/data/data.json";
-    private boolean selectorStillInUse=true;
-    public void actionSelector() {
-        while (selectorStillInUse) {
-            Scanner scanner = new Scanner(System.in);
+    private readClubs clubs;
+    private readFixtures fixtures;
 
-            System.out.println(
-                    "Print Clubs by Position\n"+
-                    "Print Clubs by Wins\n"+
-                    "Print Clubs by Losses\n"+
-                    "Print Clubs by Goals Scored\n"+
-                    "Print Fixtures\n"+
-                    "End operations");
-            System.out.println("Your Choice:");
-            String valueSelected = scanner.nextLine();
-            String valueSelectedCorrectly = valueSelected.toUpperCase().replaceAll("\\s+", "").trim();
-
-            selectedAction(valueSelectedCorrectly);
-
-        }
+    public  actionSelector(readClubs clubs, readFixtures fixtures){
+        this.clubs=clubs;
+        this.fixtures=fixtures;
     }
 
-    private void selectedAction(String valueSelectedCorrectly) {
-        switch(valueSelectedCorrectly){
-            case "PRINTCLUBSBYPOSITION":
-                printClubsByPosition();
-                break;
-            case "PRINTCLUBSBYWINS":
-                printClubsByWins();
-                break;
-            case "PRINTCLUBSBYLOSSES":
-                printClubsByLosses();
-                break;
-            case "PRINTCLUBSBYGOALSSCORED":
-                printClubsByGoalsScored();
-                break;
-            case "PRINTFIXTURES":
-                printFixtures();
-                break;
-            case "ENDOPERATIONS":
-                System.out.println("\nEnding operations");
-                selectorStillInUse=false;
-
-                break;
-        }
+    @GetMapping
+    public List<Club> getAllClubs(){
+        return clubs.findClubsArray();
     }
 
-    private void printFixtures() {
-        List<Club> clubsArray = getClubsArray();
-        List<Fixture> fixtureArray = new readFixtures(filePath, clubsArray).getFixturesList();
-        System.out.println("\nPrint Fixtures");
-        for (Fixture fixture: fixtureArray){
-            fixture.printFixture();
-        }
+    @GetMapping("goals")
+    public List<Club> getClubsByGoalsScored(){
+        return clubs.findClubsByGoalsScored();
     }
 
-    private List<Club> getClubsArray() {
-        List<Club> clubsArray =  new readClubs(filePath).getClubList();
-        return clubsArray;
+    @GetMapping("losses")
+    public List<Club> getClubsByLosses(){
+        return clubs.findClubsByLosses();
     }
 
-    private void printClubsByGoalsScored() {
-        List<Club> clubsArrayGoalsScored =  getClubsArray();
-        clubsArrayGoalsScored.sort(Comparator.comparingInt(Club::getGoalsScored).reversed());
-        System.out.println("\nPrint Clubs by Goals Scored");
-        for(Club club: clubsArrayGoalsScored){
-            club.printName();
-        }
+    @GetMapping("wins")
+    public List<Club> getClubsByWins(){
+        return clubs.findClubsByWins();
     }
 
-    private void printClubsByLosses() {
-        List<Club> clubsArrayLosses =  getClubsArray();
-        clubsArrayLosses.sort(Comparator.comparingInt(Club::getLosses).reversed());
-        System.out.println("\nPrint Clubs by Losses");
-        for(Club club: clubsArrayLosses){
-            club.printName();
-        }
+    @GetMapping("position")
+    public List<Club> getClubsByPosition(){
+        return clubs.findClubsByPosition();
     }
-
-    private void printClubsByWins() {
-        List<Club> clubsArrayWins =  getClubsArray();
-        clubsArrayWins.sort(Comparator.comparingInt(Club::getWins).reversed());
-        System.out.println("\nPrint Clubs by Wins");
-        for(Club club: clubsArrayWins){
-            club.printName();
-        }
+    @GetMapping("fixtures")
+    public List<Fixture> getAllFixtures(){
+        return fixtures.getFixturesList();
     }
-
-    private void printClubsByPosition() {
-        List<Club> clubsArrayPosition =  getClubsArray();
-        clubsArrayPosition.sort(Comparator.comparingInt(Club::getPosition));
-        System.out.println("Print Clubs by Position");
-        for(Club club: clubsArrayPosition){
-            club.printName();
-        }
-    }
-
 }

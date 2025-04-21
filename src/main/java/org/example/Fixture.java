@@ -1,7 +1,6 @@
 package org.example;
 
 public class Fixture {
-
    Club homeTeam;
    Club awayTeam;
    int homeTeamGoals;
