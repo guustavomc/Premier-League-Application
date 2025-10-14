@@ -1,7 +1,9 @@
-package org.example;
+package org.example.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.example.model.Club;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class readClubs {
+public class ClubService {
 
 
     public List<Club> clubList(){
@@ -49,7 +51,7 @@ public class readClubs {
     }
 
     public List<Club> findClubsArray() {
-        List<Club> clubsArray =  new readClubs().clubList();
+        List<Club> clubsArray =  new ClubService().clubList();
         return clubsArray;
     }
 

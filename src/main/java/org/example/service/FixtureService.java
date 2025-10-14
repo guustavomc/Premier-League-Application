@@ -1,8 +1,11 @@
-package org.example;
+package org.example.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+
+import org.example.model.Club;
+import org.example.model.Fixture;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import java.io.File;
@@ -11,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class readFixtures {
+public class FixtureService {
 
-    readClubs clubs = new readClubs();
+    ClubService clubs = new ClubService();
 
     public List<Fixture> getFixturesList(){
 
@@ -68,6 +71,6 @@ public class readFixtures {
     }
 
     private List<Fixture> findFixtures() {
-        return new readFixtures().getFixturesList();
+        return new FixtureService().getFixturesList();
     }
 }
