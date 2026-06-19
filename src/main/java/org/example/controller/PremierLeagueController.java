@@ -1,14 +1,11 @@
 package org.example.controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
 import org.example.model.Club;
 import org.example.model.Fixture;
 import org.example.service.ClubService;
 import org.example.service.FixtureService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

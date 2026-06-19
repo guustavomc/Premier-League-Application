@@ -51,8 +51,7 @@ public class ClubService {
     }
 
     public List<Club> findClubsArray() {
-        List<Club> clubsArray =  new ClubService().clubList();
-        return clubsArray;
+        return clubList();
     }
 
     public List<Club> findClubsByGoalsScored() {

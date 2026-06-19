@@ -63,16 +63,19 @@ brew install kubectl
 ## Project Structure
 
 ```
-Pokedex-JSON/
+Premier-League-Application/
 ├── src/
 │   ├── main/
 │   │   ├── java/org/example/
-│   │   │   ├── actionSelector.java
-│   │   │   ├── Club.java
-│   │   │   ├── Fixture.java
 │   │   │   ├── Main.java
-│   │   │   ├── readClubs.java
-│   │   │   ├── readFixtures.java
+│   │   │   ├── controller/
+│   │   │   │   ├── PremierLeagueController.java
+│   │   │   ├── model/
+│   │   │   │   ├── Club.java
+│   │   │   │   ├── Fixture.java
+│   │   │   ├── service/
+│   │   │   │   ├── ClubService.java
+│   │   │   │   ├── FixtureService.java
 │   │   ├── resources/
 │   │   │   ├── data.json
 ├── pom.xml
