@@ -3,6 +3,7 @@ package org.example.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.example.exception.DataLoadException;
 import org.example.model.Club;
 import org.example.model.Fixture;
 import org.springframework.core.io.ClassPathResource;
@@ -66,7 +67,7 @@ public class FixtureService {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            throw new DataLoadException("Failed to load fixture data from data.json", e);
         }
 
         return fixtureArray;

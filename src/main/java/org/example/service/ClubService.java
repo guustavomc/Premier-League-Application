@@ -3,6 +3,7 @@ package org.example.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.example.exception.DataLoadException;
 import org.example.model.Club;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,6 @@ public class ClubService {
 
             JsonNode clubsNode = rootNode.get("clubs");
 
-            //List<Club> clubsArray = new ArrayList<>();
-
             for(JsonNode club: clubsNode){
                 String name = club.get("name").asText();
                 String short_name = club.get("club_code").asText();
@@ -45,7 +44,7 @@ public class ClubService {
 
         }
         catch (IOException e) {
-            e.printStackTrace();
+            throw new DataLoadException("Failed to load club data from data.json", e);
         }
         return clubsArray;
     }

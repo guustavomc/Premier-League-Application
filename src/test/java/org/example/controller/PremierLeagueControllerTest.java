@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.exception.DataLoadException;
 import org.example.model.Club;
 import org.example.model.Fixture;
 import org.example.service.ClubService;
@@ -91,5 +92,17 @@ class PremierLeagueControllerTest {
                 .andExpect(jsonPath("$[0].homeTeam.name").value("Arsenal"))
                 .andExpect(jsonPath("$[0].awayTeam.name").value("Chelsea"))
                 .andExpect(jsonPath("$[0].homeTeamGoals").value(2));
+    }
+
+    @Test
+    void getAllClubs_whenServiceFailsToLoadData_returnsStructuredServerError() throws Exception {
+        when(clubService.findClubsArray())
+                .thenThrow(new DataLoadException("Failed to load club data from data.json", new java.io.IOException("boom")));
+
+        mockMvc.perform(get("/api/clubs"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"))
+                .andExpect(jsonPath("$.message").value("Failed to load club data from data.json"));
     }
 }
