@@ -1,7 +1,10 @@
-package org.example;
+package org.example.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.example.exception.DataLoadException;
+import org.example.model.Club;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class readClubs {
+public class ClubService {
 
 
     public List<Club> clubList(){
@@ -27,8 +30,6 @@ public class readClubs {
 
             JsonNode clubsNode = rootNode.get("clubs");
 
-            //List<Club> clubsArray = new ArrayList<>();
-
             for(JsonNode club: clubsNode){
                 String name = club.get("name").asText();
                 String short_name = club.get("club_code").asText();
@@ -43,14 +44,13 @@ public class readClubs {
 
         }
         catch (IOException e) {
-            e.printStackTrace();
+            throw new DataLoadException("Failed to load club data from data.json", e);
         }
         return clubsArray;
     }
 
     public List<Club> findClubsArray() {
-        List<Club> clubsArray =  new readClubs().clubList();
-        return clubsArray;
+        return clubList();
     }
 
     public List<Club> findClubsByGoalsScored() {

@@ -2,6 +2,7 @@
 
 This project is a REST API built with Spring Boot to serve Premier League data from a JSON file. It allows users to query Clubs by Goals, Wins, Losses, Position and check all Fixtures. This README provides a step-by-step guide to build, containerize, and deploy the application using Maven, Docker, and Kubernetes (with Kind for local development). Instructions are provided for both Windows and macOS/Linux users.
 
+This Project was build using the Json file developed on https://github.com/bakayks/PremierLeague.json
 ## Prerequisites
 
 Before starting, ensure you have the following installed:
@@ -62,16 +63,19 @@ brew install kubectl
 ## Project Structure
 
 ```
-Pokedex-JSON/
+Premier-League-Application/
 ├── src/
 │   ├── main/
 │   │   ├── java/org/example/
-│   │   │   ├── actionSelector.java
-│   │   │   ├── Club.java
-│   │   │   ├── Fixture.java
 │   │   │   ├── Main.java
-│   │   │   ├── readClubs.java
-│   │   │   ├── readFixtures.java
+│   │   │   ├── controller/
+│   │   │   │   ├── PremierLeagueController.java
+│   │   │   ├── model/
+│   │   │   │   ├── Club.java
+│   │   │   │   ├── Fixture.java
+│   │   │   ├── service/
+│   │   │   │   ├── ClubService.java
+│   │   │   │   ├── FixtureService.java
 │   │   ├── resources/
 │   │   │   ├── data.json
 ├── pom.xml
@@ -149,22 +153,6 @@ The application is packaged into a Docker container for deployment.
    - Test the API at `http://localhost:8080/api/clubs`.
 
 
-3. **Push the Image to Docker Hub**: To make the image available to Kubernetes, push it to Docker Hub:
-
-   ```bash
-   # Log in to Docker Hub (create an account at https://hub.docker.com if needed)
-   docker login
-   
-   # Tag the image with your Docker Hub username
-   docker tag premier-league-app <your-dockerhub-username>/premier-league-app:latest
-   
-   # Push the image to Docker Hub
-   docker push <your-dockerhub-username>/premier-league-app:latest
-   ```
-
-   - Replace `<your-dockerhub-username>` with your Docker Hub username.
-   - This makes the image accessible to Kubernetes clusters, including Kind.
-
 ## Step 3: Deploy to Kubernetes with Kind
 
 We use **Kind** to run a local Kubernetes cluster and deploy the API using Kubernetes manifests.
@@ -187,95 +175,29 @@ We use **Kind** to run a local Kubernetes cluster and deploy the API using Kuber
 
    - Ensures `kubectl` is connected to the Kind cluster.
 
-### 3.2 Load the Docker Image into Kind (Optional)
+### 3.2 Load the Docker Image into Kind
 
-If you prefer not to use Docker Hub, you can load the local `premier-league-app` image into Kind:
+Kind runs its own containerd instance, so it can't see images sitting in your local Docker daemon. Load the image built in Step 2 directly into the cluster:
 
 ```bash
 kind load docker-image premier-league-app:latest --name premier
 ```
 
-- This makes the image available to the Kind cluster without needing a registry. Skip this step if you pushed the image to Docker Hub.
+- This makes the image available to the Kind cluster without needing a registry.
+- The manifest in [premier-league-deployment.yaml](premier-league-deployment.yaml) is already set up for this: `image: premier-league-app:latest` with `imagePullPolicy: Never`, so the kubelet uses the image loaded into Kind instead of trying to pull it from a registry.
 
 ### 3.3 Deploy Kubernetes Resources
 
-The application is deployed using a `Deployment` and exposed via a `Service`. Optionally, an `Ingress` can be used for HTTP access.
+The application is deployed using the `Deployment` manifest in [premier-league-deployment.yaml](premier-league-deployment.yaml) and exposed via the `Service` manifest in [premier-league-service.yaml](premier-league-service.yaml). Optionally, an `Ingress` can be used for HTTP access.
 
-1. **Create the Deployment Manifest** (`premier-league-deployment.yaml`):
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: premier-league-app
-  namespace: default
-  labels:
-    app: premier-league-app
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: premier-league-app
-  template:
-    metadata:
-      labels:
-        app: premier-league-app
-    spec:
-      containers:
-        - name: premier-league-app
-          image: <your-dockerhub-username>/premier-league-app:latest
-          ports:
-            - containerPort: 8080
-          resources:
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-          livenessProbe:
-            httpGet:
-              path: /api/clubs
-              port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /api/clubs
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 5
-```      
-
-- **Important**: Replace `<your-dockerhub-username>` with your Docker Hub username in the `image` field. If you used the local image with `kind load docker-image`, use `image: premier-league-app:latest` instead.
-
-2. **Create the Service Manifest** (`premier-league-service.yaml`):
-
-   ```yaml
-   apiVersion: v1
-   kind: Service
-   metadata:
-     name: premier-league-app-service
-     namespace: default
-   spec:
-     selector:
-       app: premier-league-app
-     ports:
-       - protocol: TCP
-         port: 80
-         targetPort: 8080
-         nodePort: 30080
-     type: NodePort
-   ```
-
-3. **Apply the Manifests**:
+1. **Apply the Manifests**:
 
    ```bash
    kubectl apply -f premier-league-deployment.yaml
    kubectl apply -f premier-league-service.yaml
    ```
 
-4. **Verify the Deployment**:
+2. **Verify the Deployment**:
 
    ```bash
    kubectl get deployments

@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: premier-league-app
-          image: guustavomccb/premier-league-app:latest
+          image: premier-league-app:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           resources:

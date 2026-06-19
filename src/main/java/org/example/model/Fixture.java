@@ -1,4 +1,4 @@
-package org.example;
+package org.example.model;
 
 public class Fixture {
    Club homeTeam;
@@ -53,9 +53,5 @@ public class Fixture {
 
    public void setMatchDay(int matchDay) {
       this.matchDay = matchDay;
-   }
-
-   public void printFixture(){
-      System.out.println(getHomeTeam().getName() + "("+ getHomeTeamGoals()+") VS " + getAwayTeam().getName() + "("+ getAwayTeamGoals()+")");
    }
 }

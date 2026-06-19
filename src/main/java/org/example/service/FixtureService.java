@@ -1,19 +1,25 @@
-package org.example;
+package org.example.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
+
+import org.example.exception.DataLoadException;
+import org.example.model.Club;
+import org.example.model.Fixture;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class readFixtures {
+public class FixtureService {
 
-    readClubs clubs = new readClubs();
+    private final ClubService clubs;
+
+    public FixtureService(ClubService clubs) {
+        this.clubs = clubs;
+    }
 
     public List<Fixture> getFixturesList(){
 
@@ -61,13 +67,9 @@ public class readFixtures {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            throw new DataLoadException("Failed to load fixture data from data.json", e);
         }
 
         return fixtureArray;
-    }
-
-    private List<Fixture> findFixtures() {
-        return new readFixtures().getFixturesList();
     }
 }

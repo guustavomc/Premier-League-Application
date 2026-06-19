@@ -1,9 +1,11 @@
-package org.example;
+package org.example.controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
-import org.springframework.stereotype.Controller;
+
+import org.example.model.Club;
+import org.example.model.Fixture;
+import org.example.service.ClubService;
+import org.example.service.FixtureService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/clubs")
-public class actionSelector {
+public class PremierLeagueController {
 
-    private readClubs clubs;
-    private readFixtures fixtures;
+    private ClubService clubs;
+    private FixtureService fixtures;
 
-    public  actionSelector(readClubs clubs, readFixtures fixtures){
+    public  PremierLeagueController(ClubService clubs, FixtureService fixtures){
         this.clubs=clubs;
         this.fixtures=fixtures;
     }

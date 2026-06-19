@@ -1,4 +1,4 @@
-package org.example;
+package org.example.model;
 
 public class Club {
 
@@ -18,11 +18,11 @@ public class Club {
         this.goalsScored=goalsScored;
     }
 
-    public java.lang.String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(java.lang.String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -64,14 +64,5 @@ public class Club {
 
     public void setGoalsScored(int goalsScored) {
         this.goalsScored = goalsScored;
-    }
-
-    public void printName(){
-        System.out.println("Name: " + getName()
-                            +", Short Name: " + getClubCode()
-                            +", Position: " + getPosition()
-                            +", Wins: " + getWins()
-                            +", Loses: " + getLosses()
-                            +", Goals Scored: " + getGoalsScored());
     }
 }
